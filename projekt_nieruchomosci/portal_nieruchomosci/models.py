@@ -19,7 +19,7 @@ class PropertyType(models.Model):
     typical_features = models.CharField(
         max_length=200,
         blank=True,
-        help_text="Typowe cechy tego typu nieruchomości (np. metraż, liczba pokoi)."
+        help_text="Typowe cechy tego typu nieruchomości."
     )
     is_residential = models.BooleanField(default=True, help_text="Czy nieruchomość jest mieszkalna.")
     popularity_rank = models.PositiveSmallIntegerField(
@@ -29,6 +29,8 @@ class PropertyType(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta: 
+        ordering = ["name"] #to nam posortuje 
 
 
 class Agent(models.Model):
@@ -46,6 +48,9 @@ class Agent(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+    class Meta: 
+        ordering = ["last_name"] #to nam posortuje 
 
 
 class Property(models.Model):
@@ -56,9 +61,48 @@ class Property(models.Model):
     agent = models.ForeignKey(Agent, null=True, blank=True, on_delete=models.SET_NULL)
     property_type = models.ForeignKey(PropertyType, null=True, blank=True, on_delete=models.SET_NULL)
     available_units = models.PositiveIntegerField(default=1, help_text="Liczba pokoi")
+    square_meters = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        help_text="Metraż w m²",
+        null=True,
+        blank=True
+    )
+
+    price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        help_text="Cena nieruchomości (EUR) lub Miesięczny koszt wynajmu (EUR)",
+        null=True,
+        blank=True
+    )
+
+    location = models.CharField(
+        max_length=100,
+        help_text="Miasto, dzielnica, Kraj",
+        null=True,
+        blank=True
+    )
+    description = models.TextField(
+        blank=True,
+        help_text="Opis nieruchomości"
+    )
+    pool = models.BooleanField(default=True, help_text="Czy nieruchomość ma basen?")
+    sauna = models.BooleanField(default=True, help_text="Czy nieruchomość ma saunę?")
+    jacuzzi = models.BooleanField(default=True, help_text="Czy nieruchomość ma jacuzzi?")
+    lift = models.BooleanField(default=True, help_text="Czy nieruchomość ma windę?")
+    garage = models.BooleanField(default=True, help_text="Czy nieruchomość ma garaz lub prywatne miejsce parkingowe?")
+    balcony = models.BooleanField(default=True, help_text="Czy nieruchomość ma balkon?")
+    terrace = models.BooleanField(default=True, help_text="Czy nieruchomość ma taras?")
+    garden = models.BooleanField(default=True, help_text="Czy nieruchomość ma ogród?")
+    AC = models.BooleanField(default=True, help_text="Czy nieruchomość ma klimatyzacja?")
+    safety_system = models.BooleanField(default=True, help_text="Czy nieruchomość ma alarm lub całodobową ochronę?")
+    needs_renovation = models.BooleanField(default=True, help_text="Czy nieruchomość jest do remontu?")
 
     def __str__(self):
         return self.title
+    class Meta: 
+        ordering = ["title"]
 
 
 
@@ -72,10 +116,13 @@ class Klient(models.Model):
     imie = models.CharField(max_length=50, blank=False, null=False)
     nazwisko = models.CharField(max_length=100, blank=False, null=False)
     plec = models.CharField(max_length=1, choices=PLEC_WYBOR, default="I")
-    data_dodania = models.DateField(auto_now_add=True, editable=False)
+    data_dodania = models.DateField(auto_now_add=True, editable=False) #kiedy zarejestrował się w serwisie
 
 
 
 
     def __str__(self):
-        return self.nazwa
+        return f"{self.imie} {self.nazwisko}"
+    
+    class Meta: 
+        ordering = ["nazwisko"] #to nam posortuje 
