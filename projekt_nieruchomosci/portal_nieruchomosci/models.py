@@ -29,6 +29,8 @@ class PropertyType(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta: 
+        ordering = ["name"] #to nam posortuje 
 
 
 class Agent(models.Model):
@@ -46,6 +48,9 @@ class Agent(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+    class Meta: 
+        ordering = ["last_name"] #to nam posortuje 
 
 
 class Property(models.Model):
@@ -56,9 +61,37 @@ class Property(models.Model):
     agent = models.ForeignKey(Agent, null=True, blank=True, on_delete=models.SET_NULL)
     property_type = models.ForeignKey(PropertyType, null=True, blank=True, on_delete=models.SET_NULL)
     available_units = models.PositiveIntegerField(default=1, help_text="Liczba pokoi")
+    square_meters = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        help_text="Metraż w m²",
+        null=True,
+        blank=True
+    )
+
+    price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        help_text="Cena nieruchomości (EUR) lub Miesięczny koszt wynajmu (EUR)",
+        null=True,
+        blank=True
+    )
+
+    location = models.CharField(
+        max_length=100,
+        help_text="Miasto, dzielnica, Kraj",
+        null=True,
+        blank=True
+    )
+    description = models.TextField(
+        blank=True,
+        help_text="Opis nieruchomości"
+    )
 
     def __str__(self):
         return self.title
+    class Meta: 
+        ordering = ["title"]
 
 
 
@@ -79,3 +112,6 @@ class Klient(models.Model):
 
     def __str__(self):
         return f"{self.imie} {self.nazwisko}"
+    
+    class Meta: 
+        ordering = ["nazwisko"] #to nam posortuje 
