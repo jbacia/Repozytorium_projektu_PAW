@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'projekt_nieruchomosci.apps.PortalNieruchomosciConfig',
+    'portal_nieruchomosci.apps.PortalNieruchomosciConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
