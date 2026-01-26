@@ -18,8 +18,7 @@
         <th>Imię</th>
         <th>Nazwisko</th>
         <th>Płeć</th>
-        <th>Data dodania</th>
-        <th>Akcje</th>
+        <th>Email</th>
         </tr>
 
     </thead>
@@ -30,11 +29,13 @@
         <td>{{ klient.imie }}</td>
         <td>{{ klient.nazwisko }}</td>
         <td>{{ klient.plec }}</td>
-        <td>{{ klient.data_dodania }}</td>
-        <td>
-            <a class="btn-tertiary" href="{% url 'klient-detail-html' klient.id %}">
-    Szczegóły
-</a>
+        <td> {{ klient.email|default:"-" }}</td>
+            
+        <td> 
+                <a class="btn-tertiary" href="{% url 'klient-detail-html' klient.id %}">
+                    Szczegóły
+                </a>
+        </td>
 
         </td>
     </tr>

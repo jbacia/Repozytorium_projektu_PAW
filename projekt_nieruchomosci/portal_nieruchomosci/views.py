@@ -214,6 +214,7 @@ def user_signup(request):
         
         imie = request.POST.get('imie')
         nazwisko = request.POST.get('nazwisko')
+        email = request.POST.get('email')
 
         if pass1 != pass2:
             return render(request, 'portal_nieruchomosci/signup.html', {'error': 'Hasła muszą być takie same!'})
@@ -245,7 +246,8 @@ def user_signup(request):
                 user=user,
                 imie=imie,
                 nazwisko=nazwisko,
-                plec="I"
+                plec="I",
+                email= email 
             )
 
         user.save()
@@ -424,12 +426,16 @@ def agent_list_html(request):
 
 def agent_detail_html(request, id):
     agent = get_object_or_404(Agent, id=id)
+    properties = Property.objects.filter(agent=agent)
     if request.method == "POST":
         if not request.user.is_superuser:
             return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień!"})
         agent.delete()
         return redirect("agent-list-html")
-    return render(request, "portal_nieruchomosci/agent/detail.html", {"agent": agent})
+    return render(request, "portal_nieruchomosci/agent/detail.html", {
+        "agent": agent, 
+        "properties": properties 
+    })
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
 def agent_update_html(request, id):
@@ -476,9 +482,10 @@ def klient_create_html(request):
         imie = request.POST.get("imie")
         nazwisko = request.POST.get("nazwisko")
         plec = request.POST.get("plec")
+        email = request.POST.get("email")
         if not (imie and nazwisko and plec):
             return render(request, "portal_nieruchomosci/klient/create.html", {"error": "Błąd danych"})
-        Klient.objects.create(imie=imie, nazwisko=nazwisko, plec=plec)
+        Klient.objects.create(imie=imie, nazwisko=nazwisko, plec=plec, email=email)
         return redirect("klient-list-html")
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
@@ -507,6 +514,7 @@ def klient_update_html(request, id):
         klient.imie = request.POST.get("imie")
         klient.nazwisko = request.POST.get("nazwisko")
         klient.plec = request.POST.get("plec")
+        klient.email = request.POST.get("email")
         klient.save()
         return redirect("klient-detail-html", id=klient.id)
 

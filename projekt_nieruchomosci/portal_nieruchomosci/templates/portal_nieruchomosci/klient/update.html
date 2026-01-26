@@ -21,6 +21,10 @@
         <label>Nazwisko</label><br>
         <input type="text" name="nazwisko" value="{{ klient.nazwisko }}">
     </p>
+    <p>
+        <label>Email</label><br>
+        <input type="email" name="email" value="{{ klient.email|default:'' }}">
+    </p>
 
     <p>
         <label>Płeć</label><br>

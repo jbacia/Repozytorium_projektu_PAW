@@ -22,7 +22,6 @@
 
         a { text-decoration: none; color: inherit; }
         
-        
         #header {
             background: #3056d3;
             color: white;
@@ -30,7 +29,6 @@
             text-align: center;
         }
         #header h1 { margin: 0; font-weight: 400; }
-
         
         nav {
             background: #1f3faa;
@@ -51,7 +49,6 @@
         }
         nav a:hover { background-color: rgba(255, 255, 255, 0.2); }
         
-        
         .agent-link {
             background-color: #10b981; 
         }
@@ -70,7 +67,6 @@
         .btn-auth { border: 1px solid white; padding: 4px 10px; border-radius: 4px; font-size: 0.9em; }
         .btn-auth:hover { background: white; color: #1f3faa; }
 
-        
         #content {
             padding: 30px 20px;
             max-width: 1200px;
@@ -79,7 +75,6 @@
             box-sizing: border-box;
             flex: 1; 
         }
-
         
         .btn {
             display: inline-block;
@@ -111,7 +106,6 @@
         }
         .btn-danger:hover { background-color: #dc2626; }
 
-        
         .simple-table {
             width: 100%;
             border-collapse: collapse;
@@ -130,7 +124,6 @@
         .simple-table tr:last-child td { border-bottom: none; }
         .simple-table tr:hover { background-color: #f1f5f9; }
 
-        
         .property-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -176,7 +169,6 @@
             margin-bottom: 5px;
         }
 
-        
         form p { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 500; color: #4b5563; }
         input[type="text"], input[type="number"], input[type="password"], select, textarea {
@@ -193,7 +185,6 @@
             box-shadow: 0 0 0 3px rgba(48, 86, 211, 0.1);
         }
 
-        
         #footer {
             background: #e9ecf3;
             padding: 20px;
@@ -216,12 +207,13 @@
         <a href="{% url 'agent-list-html' %}">Agenci</a>
         <a href="{% url 'propertytype-list-html' %}">Typy nieruchomości</a>
 
-        {% if perms.portal_nieruchomosci.view_klient or request.user.is_superuser %}
+        {% if perms.portal_nieruchomosci.view_klient and not request.user.is_superuser %}
             <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.3); margin: 0 10px;"></div>
             
             <a href="{% url 'agent-my-offers' %}" class="agent-link">Moje Oferty</a>
             <a href="{% url 'agent-my-clients' %}" class="agent-link">Moi Klienci</a>
-            <a href="{% url 'klient-list-html' %}" class="agent-link">Wszyscy Klienci</a>
+        {% endif %} {% if perms.portal_nieruchomosci.view_klient or request.user.is_superuser %}
+            <a href="{% url 'klient-list-html' %}" >Wszyscy Klienci</a>
         {% endif %}
         
 

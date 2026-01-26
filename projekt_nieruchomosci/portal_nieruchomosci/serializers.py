@@ -159,7 +159,6 @@ class PropertySerializer(serializers.Serializer):
 
 
 class KlientSerializer(serializers.Serializer):
-    """Serializer dla modelu Klient."""
 
     id = serializers.IntegerField(read_only=True)
 

@@ -8,7 +8,7 @@
 <p><strong>Nazwa:</strong> {{ type.name }}</p>
 <p><strong>Opis:</strong> {{ type.description|default:"—" }}</p>
 <p><strong>Typowe cechy:</strong> {{ type.typical_features|default:"—" }}</p>
-<p><strong>Mieszkalna?:</strong> {% if type.is_residential %}Tak{% else %}Nie{% endif %}</p>
+<p><strong>Mieszkalna:</strong> {% if type.is_residential %}Tak{% else %}Nie{% endif %}</p>
 <p><strong>Ranking:</strong> {{ type.popularity_rank }}</p>
 
 {% if request.user.is_superuser %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 
 
 MONTHS = models.IntegerChoices(
@@ -47,6 +48,7 @@ class Agent(models.Model):
     last_name = models.CharField(max_length=50)
     stanowisko = models.CharField(max_length=1, choices=Stanowisko, default="A")
     region = models.CharField(max_length=2, help_text="Kod regionu lub kraju, np. PL, DE, CZ")
+    
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -68,6 +70,7 @@ class Klient(models.Model):
     nazwisko = models.CharField(max_length=100, blank=False, null=False)
     plec = models.CharField(max_length=1, choices=PLEC_WYBOR, default="I")
     data_dodania = models.DateField(auto_now_add=True, editable=False)
+    email = models.EmailField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.imie} {self.nazwisko}"
@@ -93,7 +96,8 @@ class Property(models.Model):
         decimal_places=2,
         help_text="Metraż w m²",
         null=True,
-        blank=True
+        blank=True,
+        validators=[MinValueValidator(0)]
     )
 
     price = models.DecimalField(
@@ -101,7 +105,8 @@ class Property(models.Model):
         decimal_places=2,
         help_text="Cena nieruchomości (EUR) lub Miesięczny koszt wynajmu (EUR)",
         null=True,
-        blank=True
+        blank=True,
+        validators=[MinValueValidator(0)]
     )
 
     location = models.CharField(
@@ -115,7 +120,7 @@ class Property(models.Model):
         help_text="Opis nieruchomości"
     )
     
-    # Udogodnienia
+    
     pool = models.BooleanField(default=True, help_text="Czy nieruchomość ma basen?")
     sauna = models.BooleanField(default=True, help_text="Czy nieruchomość ma saunę?")
     jacuzzi = models.BooleanField(default=True, help_text="Czy nieruchomość ma jacuzzi?")
