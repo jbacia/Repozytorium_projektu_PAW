@@ -8,8 +8,40 @@
 <p><strong>Nazwa:</strong> {{ type.name }}</p>
 <p><strong>Opis:</strong> {{ type.description|default:"—" }}</p>
 <p><strong>Typowe cechy:</strong> {{ type.typical_features|default:"—" }}</p>
-<p><strong>Mieszkalna?:</strong> {% if type.is_residential %}Tak{% else %}Nie{% endif %}</p>
+<p><strong>Mieszkalna:</strong> {% if type.is_residential %}Tak{% else %}Nie{% endif %}</p>
 <p><strong>Ranking:</strong> {{ type.popularity_rank }}</p>
+<hr>
+<h3>Oferty w kategorii: {{ type.name }}</h3>
+
+<table class="simple-table">
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Lokalizacja</th>
+            <th>Cena</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for property in properties %}
+        <tr>
+            <td>
+                <strong>{{ property.title }}</strong>
+            </td>
+            <td>{{ property.location }}</td>
+            <td>{{ property.price }} EUR</td>
+            <td>
+                <a href="{% url 'property-detail-html' property.id %}" class="btn-tertiary">
+                    Zobacz
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Brak aktualnych ofert tego typu.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% if request.user.is_superuser %}
 <a class="btn-tertiary" href="{% url 'propertytype-update-html' type.id %}">

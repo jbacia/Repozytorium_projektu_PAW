@@ -20,6 +20,13 @@
     <label>Lokalizacja</label><br>
     <input type="text" name="location" value="{{ property.location }}">
   </p>
+  <p>
+    <label>Typ transakcji *</label><br>
+    <select name="transaction_type">
+        <option value="S" {% if property.transaction_type == 'S' %}selected{% endif %}>Sprzedaż</option>
+        <option value="W" {% if property.transaction_type == 'W' %}selected{% endif %}>Wynajem</option>
+    </select>
+</p>
 
   <p>
     <label>Cena (EUR)</label><br>
