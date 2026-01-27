@@ -8,7 +8,13 @@
 <p>Lokalizacja: {{ property.location }}</p>
 <p>Cena: {{ property.price }} EUR</p>
 <p>Metraż: {{ property.square_meters }} m²</p>
+<p>Typ transakcji (S - Sprzedaż, W - Wynajem): {{ property.transaction_type }}</p>
 <p>Agent: {{ property.agent }}</p>
+<p>
+            ✉️ <a href="mailto:{{ property.agent.email|default:'' }}">
+                {{ property.agent.email|default:"-" }}
+            </a>
+        </p>
 <p>Opis: {{ property.description }}</p>
 
 <h3>Udogodnienia:</h3>

@@ -47,6 +47,7 @@ class Agent(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     stanowisko = models.CharField(max_length=1, choices=Stanowisko, default="A")
+    email = models.EmailField(blank=True, null=True)
     region = models.CharField(max_length=2, help_text="Kod regionu lub kraju, np. PL, DE, CZ")
     
 

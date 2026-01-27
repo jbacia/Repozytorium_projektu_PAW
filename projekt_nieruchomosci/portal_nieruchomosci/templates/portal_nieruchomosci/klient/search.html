@@ -35,6 +35,11 @@
             <td>{{ klient.nazwisko }}</td>
             <td>{{ klient.plec }}</td>
             <td>{{ klient.data_dodania }}</td>
+            <td>
+            <a href="{% url 'klient-detail-html' klient.id %}" class="btn-tertiary">
+                Szczegóły
+            </a>
+        </td>
         </tr>
         {% empty %}
         {% if query %}

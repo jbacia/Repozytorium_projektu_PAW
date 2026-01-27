@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test, per
 from django.db.models import Q 
 from django.http import HttpResponseForbidden 
 from django.contrib.auth.models import Group, User
+from django.utils import timezone
 
 
 @api_view(["GET", "POST"])
@@ -226,7 +227,7 @@ def user_signup(request):
             return render(request, 'portal_nieruchomosci/signup.html', {'error': 'Taki login jest już zajęty!'})
 
         
-        user = User.objects.create_user(username=username, password=pass1)
+        user = User.objects.create_user(username=username, password=pass1, email=email)
         
         
         if role == 'agent':
@@ -237,7 +238,8 @@ def user_signup(request):
                 first_name=imie, 
                 last_name=nazwisko,
                 region="PL", 
-                stanowisko="A"
+                stanowisko="A",
+                email=email
             )
         elif role == 'client':
             group, _ = Group.objects.get_or_create(name='Klienci')
@@ -337,7 +339,9 @@ def property_create_html(request):
         location = request.POST.get("location")
         description = request.POST.get("description", "")
         price = request.POST.get("price")
+        transaction_type = request.POST.get("transaction_type", "S")
         square_meters = request.POST.get("square_meters")
+        current_month = timezone.now().month
 
         
         if is_agent:
@@ -371,7 +375,7 @@ def property_create_html(request):
             agent=agent_obj, property_type=type_obj,
             pool=pool, sauna=sauna, jacuzzi=jacuzzi, lift=lift, garage=garage,
             balcony=balcony, terrace=terrace, garden=garden, AC=AC,
-            safety_system=safety_system, needs_renovation=needs_renovation,
+            safety_system=safety_system, needs_renovation=needs_renovation, listing_month=current_month
         )
         
         if is_agent:
@@ -395,6 +399,7 @@ def property_update_html(request, id):
         property_obj.location = request.POST.get("location")
         property_obj.description = request.POST.get("description")
         property_obj.price = request.POST.get("price")
+        transaction_type = request.POST.get("transaction_type", "S")
         property_obj.square_meters = request.POST.get("square_meters")
 
         property_obj.pool = bool(request.POST.get("pool"))
@@ -430,7 +435,10 @@ def agent_detail_html(request, id):
     if request.method == "POST":
         if not request.user.is_superuser:
             return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień!"})
-        agent.delete()
+        user_to_delete = agent.user
+        agent.delete() 
+        if user_to_delete:
+            user_to_delete.delete() 
         return redirect("agent-list-html")
     return render(request, "portal_nieruchomosci/agent/detail.html", {
         "agent": agent, 
@@ -445,12 +453,17 @@ def agent_update_html(request, id):
     elif request.method == "POST":
         agent.first_name = request.POST.get("first_name")
         agent.last_name = request.POST.get("last_name")
+        agent.email = request.POST.get("email")
         agent.region = request.POST.get("region")
         agent.stanowisko = request.POST.get("stanowisko")
         if not (agent.first_name and agent.last_name and agent.stanowisko):
             error = "Dane wymagane."
             return render(request, "portal_nieruchomosci/agent/update.html", {"agent": agent, "error": error})
         agent.save()
+        if agent.user:
+            if agent.user.email != agent.email:
+                agent.user.email = agent.email
+                agent.user.save()
         return redirect("agent-detail-html", id=agent.id)
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
@@ -460,9 +473,10 @@ def agent_create_html(request):
     elif request.method == "POST":
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
         region = request.POST.get("region")
         stanowisko = request.POST.get("stanowisko")
-        Agent.objects.create(first_name=first_name, last_name=last_name, region=region, stanowisko=stanowisko)
+        Agent.objects.create(first_name=first_name, last_name=last_name, region=region, stanowisko=stanowisko, email=email)
         return redirect("agent-list-html")
 
 
@@ -474,35 +488,62 @@ def klient_list_html(request):
     klienci = Klient.objects.all()
     return render(request, "portal_nieruchomosci/klient/list.html", {"klienci": klienci})
 
-@user_passes_test(lambda u: u.is_superuser, login_url='user-login')
+@login_required(login_url='user-login')  
 def klient_create_html(request):
+    is_agent = hasattr(request.user, 'agent_profile')
+    if not (request.user.is_superuser or is_agent):
+        return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień do dodawania klientów."})
+
     if request.method == "GET":
         return render(request, "portal_nieruchomosci/klient/create.html", {})
+    
     elif request.method == "POST":
         imie = request.POST.get("imie")
         nazwisko = request.POST.get("nazwisko")
         plec = request.POST.get("plec")
         email = request.POST.get("email")
+        
         if not (imie and nazwisko and plec):
-            return render(request, "portal_nieruchomosci/klient/create.html", {"error": "Błąd danych"})
-        Klient.objects.create(imie=imie, nazwisko=nazwisko, plec=plec, email=email)
+            return render(request, "portal_nieruchomosci/klient/create.html", {"error": "Wypełnij wszystkie pola!"})
+        
+        
+        new_klient = Klient.objects.create(imie=imie, nazwisko=nazwisko, plec=plec, email=email)
+        
+        
+        if is_agent:
+            new_klient.opiekun = request.user.agent_profile
+            new_klient.save()
+
         return redirect("klient-list-html")
 
-@user_passes_test(lambda u: u.is_superuser, login_url='user-login')
+@login_required(login_url='user-login')  
 def klient_search_html(request):
+    is_agent = hasattr(request.user, 'agent_profile')
+    if not (request.user.is_superuser or is_agent):
+        return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień do wyszukiwania."})
+
     query = request.GET.get("q", "")
     if query:
         klienci = Klient.objects.filter(nazwisko__icontains=query)
     else:
         klienci = Klient.objects.none()
+        
     return render(request, "portal_nieruchomosci/klient/search.html", {"klienci": klienci, "query": query})
 
-@user_passes_test(lambda u: u.is_superuser, login_url='user-login')
+@login_required(login_url='user-login')  
 def klient_detail_html(request, id):
     klient = get_object_or_404(Klient, id=id)
+    is_agent = hasattr(request.user, 'agent_profile')
+    if not (request.user.is_superuser or is_agent):
+        return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień do przeglądania tej strony."})
+
     if request.method == "POST":
+        if not request.user.is_superuser:
+             return render(request, "portal_nieruchomosci/login.html", {"error": "Tylko administrator może usuwać klientów!"})
+        
         klient.delete()
         return redirect("klient-list-html")
+
     return render(request, "portal_nieruchomosci/klient/detail.html", {"klient": klient})
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
@@ -545,12 +586,13 @@ def propertytype_create_html(request):
 
 def propertytype_detail_html(request, id):
     pt = get_object_or_404(PropertyType, id=id)
+    properties = Property.objects.filter(property_type=pt)
     if request.method == "POST":
         if not request.user.is_superuser:
              return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień"})
         pt.delete()
         return redirect("propertytype-list-html")
-    return render(request, "portal_nieruchomosci/propertytype/detail.html", {"type": pt})
+    return render(request, "portal_nieruchomosci/propertytype/detail.html", {"type": pt, "properties": properties})
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
 def propertytype_update_html(request, id):

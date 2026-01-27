@@ -12,17 +12,14 @@
 <table class="simple-table">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Nazwa</th>
-      <th>Mieszkalna?</th>
+      <th>Mieszkalna</th>
       <th>Ranking</th>
-      <th>Akcje</th>
     </tr>
   </thead>
   <tbody>
     {% for t in types %}
       <tr>
-        <td>{{ t.id }}</td>
         <td>{{ t.name }}</td>
         <td>{% if t.is_residential %}Tak{% else %}Nie{% endif %}</td>
         <td>{{ t.popularity_rank }}</td>

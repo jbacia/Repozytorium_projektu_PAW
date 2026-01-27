@@ -21,6 +21,14 @@
     <label>Lokalizacja *</label><br>
     <input type="text" name="location">
   </p>
+  <p>
+    <label>Typ transakcji *</label><br>
+    <select name="transaction_type">
+        <option value="S">Sprzedaż</option>
+        
+        <option value="W">Wynajem</option>
+    </select>
+</p>
 
   <p>
     <label>Cena (EUR) *</label><br>
@@ -36,17 +44,26 @@
     <label>Opis</label><br>
     <textarea name="description" rows="5"></textarea>
   </p>
-
+ {% if request.user.is_superuser %}
   <p>
     <label>Agent</label><br>
+
     <select name="agent">
       <option value="">— brak —</option>
       {% for a in agents %}
         <option value="{{ a.id }}">{{ a.first_name }} {{ a.last_name }}</option>
       {% endfor %}
     </select>
+    <p>
+    <label>Typ transakcji</label><br>
+    <select name="transaction_type">
+        <option value="S">Sprzedaż</option>
+        <option value="W">Wynajem</option>
+    </select>
+</p>
+    
   </p>
-
+{% endif %}
   <p>
     <label>Typ nieruchomości</label><br>
     <select name="property_type">
