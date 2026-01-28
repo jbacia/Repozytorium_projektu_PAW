@@ -6,7 +6,7 @@
 <h2> Wyszukiwarka klientów</h2>
 
 <form method="get" action="{% url 'klient-search-html' %}">
-    <label for="q">Fragment nazwiska:</label>
+    <label for="q">Szukaj po imieniu lub nazwisku:</label>
     <input type="text" id="q" name="q" value="{{ query }}">
     <button type="submit" class="btn">Szukaj</button>
 </form>
@@ -48,7 +48,7 @@
         </tr>
         {% else %}
         <tr>
-            <td colspan="5">Wpisz fragment nazwiska i kliknij „Szukaj”.</td>
+            <td colspan="5">Wpisz imię lub nazwisko i kliknij „Szukaj”.</td>
         </tr>
         {% endif %}
         {% endfor %}

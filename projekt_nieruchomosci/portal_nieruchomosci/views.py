@@ -369,6 +369,17 @@ def property_create_html(request):
         if not (title and location and price and square_meters):
             error = "Tytuł, lokalizacja, cena i metraż są wymagane."
             return render(request, "portal_nieruchomosci/property/create.html", {"error": error, "agents": agents, "types": types})
+        
+        try:
+            price_val = float(price)
+            sq_val = float(square_meters)
+            
+            if price_val <= 0 or sq_val <= 0:
+                error = "Cena i metraż muszą być liczbami dodatnimi!"
+                return render(request, "portal_nieruchomosci/property/create.html", {"error": error, "agents": agents, "types": types})
+        except ValueError:
+            error = "Podano nieprawidłowy format liczby."
+            return render(request, "portal_nieruchomosci/property/create.html", {"error": error, "agents": agents, "types": types})
 
         Property.objects.create(
             title=title, location=location, description=description, price=price, square_meters=square_meters,
@@ -417,6 +428,17 @@ def property_update_html(request, id):
         if not (property_obj.title and property_obj.location and property_obj.price and property_obj.square_meters):
             error = "Pola wymagane nie mogą być puste."
             return render(request, "portal_nieruchomosci/property/update.html", {"property": property_obj, "error": error})
+        
+        try:
+            price_val = float(property_obj.price)
+            sq_val = float(property_obj.square_meters)
+
+            if price_val <= 0 or sq_val <= 0:
+                error = "Cena i metraż muszą być liczbami dodatnimi!"
+                return render(request, "portal_nieruchomosci/property/update.html", {"property": property_obj, "error": error})
+        except ValueError:
+             error = "Podano nieprawidłowy format liczby."
+             return render(request, "portal_nieruchomosci/property/update.html", {"property": property_obj, "error": error})
 
         property_obj.save()
         return redirect("property-detail-html", id=property_obj.id)
@@ -524,7 +546,9 @@ def klient_search_html(request):
 
     query = request.GET.get("q", "")
     if query:
-        klienci = Klient.objects.filter(nazwisko__icontains=query)
+        klienci = Klient.objects.filter(
+            Q(nazwisko__icontains=query) | Q(imie__icontains=query)
+        )
     else:
         klienci = Klient.objects.none()
         
