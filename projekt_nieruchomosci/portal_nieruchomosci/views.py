@@ -60,7 +60,7 @@ def klient_update(request, pk):
 def klient_delete(request, pk):
     klient = get_object_or_404(Klient, pk=pk, user=request.user)
     klient.delete()
-    return Response(status=status.HTTP_24_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
@@ -279,9 +279,9 @@ def agent_my_clients(request):
     })
 
 @login_required(login_url='user-login')
-def przypisz_klienta(request, id):
+def przypisz_klienta(request, pk):
     if request.method == "POST" and hasattr(request.user, 'agent_profile'):
-        klient = get_object_or_404(Klient, id=id)
+        klient = get_object_or_404(Klient, pk=pk)
         if klient.opiekun is None:
             klient.opiekun = request.user.agent_profile
             klient.save()
@@ -293,8 +293,8 @@ def property_list_html(request):
     return render(request, "portal_nieruchomosci/property/list.html", {"properties": properties})
 
 
-def property_detail_html(request, id):
-    property_obj = get_object_or_404(Property, id=id)
+def property_detail_html(request, pk):
+    property_obj = get_object_or_404(Property, pk=pk)
     
     if request.method == "POST":
         is_owner_agent = hasattr(request.user, 'agent_profile') and property_obj.agent == request.user.agent_profile
@@ -334,10 +334,10 @@ def property_create_html(request):
             agent_obj = request.user.agent_profile
         else:
             agent_id = request.POST.get("agent")
-            agent_obj = Agent.objects.filter(id=agent_id).first() if agent_id else None
+            agent_obj = Agent.objects.filter(pk=agent_id).first() if agent_id else None
 
         type_id = request.POST.get("property_type")
-        type_obj = PropertyType.objects.filter(id=type_id).first() if type_id else None
+        type_obj = PropertyType.objects.filter(pk=type_id).first() if type_id else None
 
         pool = bool(request.POST.get("pool"))
         sauna = bool(request.POST.get("sauna"))
@@ -378,8 +378,8 @@ def property_create_html(request):
         return redirect("property-list-html")
 
 @login_required(login_url='user-login')
-def property_update_html(request, id):
-    property_obj = get_object_or_404(Property, id=id)
+def property_update_html(request, pk):
+    property_obj = get_object_or_404(Property, pk=pk)
 
     is_owner_agent = hasattr(request.user, 'agent_profile') and property_obj.agent == request.user.agent_profile
     if not (request.user.is_superuser or is_owner_agent):
@@ -422,7 +422,7 @@ def property_update_html(request, id):
              return render(request, "portal_nieruchomosci/property/update.html", {"property": property_obj, "error": error})
 
         property_obj.save()
-        return redirect("property-detail-html", id=property_obj.id)
+        return redirect("property-detail-html", pk=property_obj.pk)
 
 
 def agent_list_html(request):
@@ -430,8 +430,8 @@ def agent_list_html(request):
     return render(request, "portal_nieruchomosci/agent/list.html", {"agents": agents})
 
 
-def agent_detail_html(request, id):
-    agent = get_object_or_404(Agent, id=id)
+def agent_detail_html(request, pk):
+    agent = get_object_or_404(Agent, pk=pk)
     properties = Property.objects.filter(agent=agent)
     if request.method == "POST":
         if not request.user.is_superuser:
@@ -447,8 +447,8 @@ def agent_detail_html(request, id):
     })
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
-def agent_update_html(request, id):
-    agent = get_object_or_404(Agent, id=id)
+def agent_update_html(request, pk):
+    agent = get_object_or_404(Agent, pk=pk)
     if request.method == "GET":
         return render(request, "portal_nieruchomosci/agent/update.html", {"agent": agent})
     elif request.method == "POST":
@@ -466,7 +466,7 @@ def agent_update_html(request, id):
             if agent.user.email != agent.email:
                 agent.user.email = agent.email
                 agent.user.save()
-        return redirect("agent-detail-html", id=agent.id)
+        return redirect("agent-detail-html", pk=agent.pk)
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
 def agent_create_html(request):
@@ -530,8 +530,8 @@ def klient_search_html(request):
     return render(request, "portal_nieruchomosci/klient/search.html", {"klienci": klienci, "query": query})
 
 @login_required(login_url='user-login')  
-def klient_detail_html(request, id):
-    klient = get_object_or_404(Klient, id=id)
+def klient_detail_html(request, pk):
+    klient = get_object_or_404(Klient, pk=pk)
     is_agent = hasattr(request.user, 'agent_profile')
     if not (request.user.is_superuser or is_agent):
         return render(request, "portal_nieruchomosci/login.html", {"error": "Brak uprawnień do przeglądania tej strony."})
@@ -546,8 +546,8 @@ def klient_detail_html(request, id):
     return render(request, "portal_nieruchomosci/klient/detail.html", {"klient": klient})
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
-def klient_update_html(request, id):
-    klient = get_object_or_404(Klient, id=id)
+def klient_update_html(request, pk):
+    klient = get_object_or_404(Klient, pk=pk)
     if request.method == "GET":
         return render(request, "portal_nieruchomosci/klient/update.html", {"klient": klient})
     elif request.method == "POST":
@@ -556,7 +556,7 @@ def klient_update_html(request, id):
         klient.plec = request.POST.get("plec")
         klient.email = request.POST.get("email")
         klient.save()
-        return redirect("klient-detail-html", id=klient.id)
+        return redirect("klient-detail-html", pk=klient.pk)
 
 
 def propertytype_list_html(request):
@@ -581,8 +581,8 @@ def propertytype_create_html(request):
         PropertyType.objects.create(name=name, description=description, typical_features=typical_features, is_residential=is_residential, popularity_rank=popularity_rank)
         return redirect("propertytype-list-html")
 
-def propertytype_detail_html(request, id):
-    pt = get_object_or_404(PropertyType, id=id)
+def propertytype_detail_html(request, pk):
+    pt = get_object_or_404(PropertyType, pk=pk)
     properties = Property.objects.filter(property_type=pt)
     if request.method == "POST":
         if not request.user.is_superuser:
@@ -592,8 +592,8 @@ def propertytype_detail_html(request, id):
     return render(request, "portal_nieruchomosci/propertytype/detail.html", {"type": pt, "properties": properties})
 
 @user_passes_test(lambda u: u.is_superuser, login_url='user-login')
-def propertytype_update_html(request, id):
-    pt = get_object_or_404(PropertyType, id=id)
+def propertytype_update_html(request, pk):
+    pt = get_object_or_404(PropertyType, pk=pk)
     if request.method == "GET":
         return render(request, "portal_nieruchomosci/propertytype/update.html", {"type": pt})
     elif request.method == "POST":
@@ -607,4 +607,4 @@ def propertytype_update_html(request, id):
         except ValueError:
             pt.popularity_rank = 0
         pt.save()
-        return redirect("propertytype-detail-html", id=pt.id)
+        return redirect("propertytype-detail-html", pk=pt.pk)

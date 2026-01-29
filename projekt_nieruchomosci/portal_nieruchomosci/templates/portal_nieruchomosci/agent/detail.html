@@ -37,7 +37,7 @@
             <td>{{ property.location }}</td>
             <td>{{ property.price }} PLN</td>
             <td>
-                <a href="{% url 'property-detail-html' property.id %}" class="btn-tertiary">
+                <a href="{% url 'property-detail-html' pk=property.pk %}" class="btn-tertiary">
                     Zobacz
                 </a>
             </td>
@@ -52,7 +52,7 @@
 
 {% if request.user.is_superuser %}
 <div style="margin-top: 20px;">
-    <a class="btn-tertiary" href="{% url 'agent-update-html' agent.id %}">
+    <a class="btn-tertiary" href="{% url 'agent-update-html' pk=agent.pk %}">
        Edytuj agenta
     </a>
 

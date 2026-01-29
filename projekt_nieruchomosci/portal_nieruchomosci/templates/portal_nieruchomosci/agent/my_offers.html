@@ -11,8 +11,8 @@
             <p>{{ property.location }} | {{ property.price }} PLN</p>
         </div>
         <div class="property-card-footer">
-            <a href="{% url 'property-update-html' property.id %}" class="btn-tertiary">Edytuj</a>
-            <a href="{% url 'property-detail-html' property.id %}" class="btn">Podgląd</a>
+            <a href="{% url 'property-update-html' pk=property.pk %}" class="btn-tertiary">Edytuj</a>
+            <a href="{% url 'property-detail-html' pk=property.pk %}" class="btn">Podgląd</a>
         </div>
     </div>
     {% empty %}

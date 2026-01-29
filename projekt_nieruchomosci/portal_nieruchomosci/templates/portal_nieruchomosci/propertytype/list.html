@@ -15,7 +15,7 @@
       <th>Nazwa</th>
       <th>Mieszkalna</th>
       <th>Ranking</th>
-    </tr>
+      <th>Akcja</th> </tr>
   </thead>
   <tbody>
     {% for t in types %}
@@ -24,15 +24,14 @@
         <td>{% if t.is_residential %}Tak{% else %}Nie{% endif %}</td>
         <td>{{ t.popularity_rank }}</td>
         <td>
-          <a class="btn-tertiary" href="{% url 'propertytype-detail-html' t.id %}">
+          <a class="btn-tertiary" href="{% url 'propertytype-detail-html' pk=t.pk %}">
             Szczegóły
           </a>
         </td>
       </tr>
     {% empty %}
       <tr>
-        <td colspan="5">Brak typów w bazie.</td>
-      </tr>
+        <td colspan="4">Brak typów w bazie.</td> </tr>
     {% endfor %}
   </tbody>
 </table>

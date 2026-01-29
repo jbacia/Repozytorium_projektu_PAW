@@ -8,10 +8,8 @@ from .models import (
     TRANSACTION_TYPES,
 )
 
-from .models import PropertyType
-
 class PropertyTypeSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=50)
     description = serializers.CharField(allow_blank=True, required=False)
     typical_features = serializers.CharField(allow_blank=True, required=False, max_length=200)
@@ -32,7 +30,7 @@ class PropertyTypeSerializer(serializers.Serializer):
 
 
 class AgentSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True) 
     first_name = serializers.CharField(required=True, max_length=50)
     last_name = serializers.CharField(required=True, max_length=50)
     region = serializers.CharField(required=True, max_length=3)
@@ -49,7 +47,7 @@ class AgentSerializer(serializers.Serializer):
 
 
 class PropertySerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)
     title = serializers.CharField(required=True, max_length=100)
 
     listing_month = serializers.ChoiceField(
@@ -141,7 +139,7 @@ class PropertySerializer(serializers.Serializer):
 
 
 class KlientSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)
     imie = serializers.CharField(required=True, max_length=50)
     nazwisko = serializers.CharField(required=True, max_length=100)
 

@@ -14,62 +14,55 @@
 
   <p>
     <label>Tytuł *</label><br>
-    <input type="text" name="title">
+    <input type="text" name="title" required>
   </p>
 
   <p>
     <label>Lokalizacja *</label><br>
-    <input type="text" name="location">
+    <input type="text" name="location" required>
   </p>
+
   <p>
     <label>Typ transakcji *</label><br>
-    <select name="transaction_type">
+    <select name="transaction_type" required>
         <option value="S">Sprzedaż</option>
-        
         <option value="W">Wynajem</option>
     </select>
-</p>
+  </p>
 
   <p>
     <label>Cena (PLN) *</label><br>
-    <input type="number" step="0.01" name="price" min="0">
+    <input type="number" step="0.01" name="price" min="0" required>
   </p>
 
   <p>
     <label>Metraż (m²) *</label><br>
-    <input type="number" step="0.01" name="square_meters" min="0">
+    <input type="number" step="0.01" name="square_meters" min="0" required>
   </p>
 
   <p>
     <label>Opis</label><br>
     <textarea name="description" rows="5"></textarea>
   </p>
+
  {% if request.user.is_superuser %}
   <p>
     <label>Agent</label><br>
-
     <select name="agent">
       <option value="">— brak —</option>
       {% for a in agents %}
-        <option value="{{ a.id }}">{{ a.first_name }} {{ a.last_name }}</option>
+        <option value="{{ a.pk }}">{{ a.first_name }} {{ a.last_name }}</option>
       {% endfor %}
     </select>
-    <p>
-    <label>Typ transakcji</label><br>
-    <select name="transaction_type">
-        <option value="S">Sprzedaż</option>
-        <option value="W">Wynajem</option>
-    </select>
-</p>
-    
   </p>
 {% endif %}
+
   <p>
     <label>Typ nieruchomości</label><br>
     <select name="property_type">
       <option value="">— brak —</option>
       {% for t in types %}
-        <option value="{{ t.id }}">{{ t.name }}</option>
+        <option value="{{ t.pk }}">{{ t.name }}</option>
       {% endfor %}
     </select>
   </p>

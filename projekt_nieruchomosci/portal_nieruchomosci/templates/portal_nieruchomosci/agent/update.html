@@ -28,11 +28,11 @@
 
   <p>
     <label>Region</label><br>
-    <input type="text" name="region" value="{{ agent.region }}" maxlength="3">
+    <input type="text" name="region" value="{{ agent.region }}" maxlength="3" placeholder="np. POL">
   </p>
 
   <button type="submit" class="btn">Zapisz zmiany</button>
-  <a class="btn-tertiary" href="{% url 'agent-detail-html' agent.id %}">
+  <a class="btn-tertiary" href="{% url 'agent-detail-html' pk=agent.pk %}">
     Anuluj
   </a>
 </form>

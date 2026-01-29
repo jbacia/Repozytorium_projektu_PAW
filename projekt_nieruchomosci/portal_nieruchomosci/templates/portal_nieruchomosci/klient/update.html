@@ -14,12 +14,12 @@
 
     <p>
         <label>Imię</label><br>
-        <input type="text" name="imie" value="{{ klient.imie }}">
+        <input type="text" name="imie" value="{{ klient.imie }}" required>
     </p>
 
     <p>
         <label>Nazwisko</label><br>
-        <input type="text" name="nazwisko" value="{{ klient.nazwisko }}">
+        <input type="text" name="nazwisko" value="{{ klient.nazwisko }}" required>
     </p>
     <p>
         <label>Email</label><br>
@@ -28,7 +28,7 @@
 
     <p>
         <label>Płeć</label><br>
-        <select name="plec">
+        <select name="plec" required>
             <option value="K" {% if klient.plec == "K" %}selected{% endif %}>Kobieta</option>
             <option value="M" {% if klient.plec == "M" %}selected{% endif %}>Mężczyzna</option>
             <option value="I" {% if klient.plec == "I" %}selected{% endif %}>Inna</option>
@@ -36,6 +36,6 @@
     </p>
 
     <button type="submit" class="btn">Zapisz zmiany</button>
-    <a class="btn-tertiary" href="{% url 'klient-detail-html' klient.id %}">Anuluj</a>
+    <a class="btn-tertiary" href="{% url 'klient-detail-html' pk=klient.pk %}">Anuluj</a>
 </form>
 {% endblock %}

@@ -13,29 +13,30 @@
 
   <p>
     <label>Tytuł</label><br>
-    <input type="text" name="title" value="{{ property.title }}">
+    <input type="text" name="title" value="{{ property.title }}" required>
   </p>
 
   <p>
     <label>Lokalizacja</label><br>
-    <input type="text" name="location" value="{{ property.location }}">
+    <input type="text" name="location" value="{{ property.location }}" required>
   </p>
+  
   <p>
     <label>Typ transakcji *</label><br>
-    <select name="transaction_type">
+    <select name="transaction_type" required>
         <option value="S" {% if property.transaction_type == 'S' %}selected{% endif %}>Sprzedaż</option>
         <option value="W" {% if property.transaction_type == 'W' %}selected{% endif %}>Wynajem</option>
     </select>
-</p>
+  </p>
 
   <p>
     <label>Cena (PLN)</label><br>
-    <input type="number" step="0.01" name="price" value="{{ property.price }}" step="0.01">
+    <input type="number" step="0.01" name="price" value="{{ property.price }}" min="0" required>
   </p>
 
   <p>
     <label>Metraż (m²)</label><br>
-    <input type="number" step="0.01" name="square_meters" value="{{ property.square_meters }}" step="0.01">
+    <input type="number" step="0.01" name="square_meters" value="{{ property.square_meters }}" min="0" required>
   </p>
 
   <p>
@@ -59,6 +60,6 @@
   </p>
 
   <button type="submit" class="btn">Zapisz zmiany</button>
-  <a class="btn-tertiary" href="{% url 'property-detail-html' property.id %}">Anuluj</a>
+  <a class="btn-tertiary" href="{% url 'property-detail-html' pk=property.pk %}">Anuluj</a>
 </form>
 {% endblock %}
