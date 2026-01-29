@@ -14,13 +14,14 @@
 
   <p>
     <label>Imię *</label><br>
-    <input type="text" name="first_name">
+    <input type="text" name="first_name" required>
   </p>
 
   <p>
     <label>Nazwisko *</label><br>
-    <input type="text" name="last_name">
+    <input type="text" name="last_name" required>
   </p>
+
   <p>
     <label>Email *</label><br>
     <input type="email" name="email">
@@ -28,18 +29,7 @@
 
   <p>
     <label>Region *</label><br>
-    <input type="text" name="region" maxlength="2" placeholder="np. PL">
-  </p>
-
-  <p>
-    <label>Stanowisko *</label><br>
-    <select name="stanowisko">
-      <option value="">-- wybierz --</option>
-      <option value="A">Agent nieruchomości</option>
-      <option value="D">Doradca sprzedaży</option>
-      <option value="O">Osoba prywatna</option>
-      <option value="F">Firma</option>
-    </select>
+    <input type="text" name="region" maxlength="3" placeholder="np. PL">
   </p>
 
   <button type="submit" class="btn">Zapisz</button>

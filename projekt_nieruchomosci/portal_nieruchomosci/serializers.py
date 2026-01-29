@@ -11,9 +11,7 @@ from .models import (
 from .models import PropertyType
 
 class PropertyTypeSerializer(serializers.Serializer):
-
     id = serializers.IntegerField(read_only=True)
-
     name = serializers.CharField(required=True, max_length=50)
     description = serializers.CharField(allow_blank=True, required=False)
     typical_features = serializers.CharField(allow_blank=True, required=False, max_length=200)
@@ -34,19 +32,10 @@ class PropertyTypeSerializer(serializers.Serializer):
 
 
 class AgentSerializer(serializers.Serializer):
-
     id = serializers.IntegerField(read_only=True)
-
     first_name = serializers.CharField(required=True, max_length=50)
     last_name = serializers.CharField(required=True, max_length=50)
-
-    
-    stanowisko = serializers.ChoiceField(
-        choices=Agent.Stanowisko,
-        default=Agent.Stanowisko[0][0]  
-    )
-
-    region = serializers.CharField(required=True, max_length=2)
+    region = serializers.CharField(required=True, max_length=3)
 
     def create(self, validated_data):
         return Agent.objects.create(**validated_data)
@@ -54,31 +43,25 @@ class AgentSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.last_name = validated_data.get("last_name", instance.last_name)
-        instance.stanowisko = validated_data.get("stanowisko", instance.stanowisko)
         instance.region = validated_data.get("region", instance.region)
         instance.save()
         return instance
 
 
 class PropertySerializer(serializers.Serializer):
-
     id = serializers.IntegerField(read_only=True)
-
     title = serializers.CharField(required=True, max_length=100)
 
-  
     listing_month = serializers.ChoiceField(
         choices=MONTHS.choices,
         default=MONTHS.choices[0][0]  
     )
 
-   
     transaction_type = serializers.ChoiceField(
         choices=TRANSACTION_TYPES,
         default=TRANSACTION_TYPES[0][0]  
     )
 
-    
     agent = serializers.PrimaryKeyRelatedField(
         queryset=Agent.objects.all(),
         allow_null=True,
@@ -116,18 +99,17 @@ class PropertySerializer(serializers.Serializer):
         required=False
     )
 
-    
-    pool = serializers.BooleanField(default=True)
-    sauna = serializers.BooleanField(default=True)
-    jacuzzi = serializers.BooleanField(default=True)
-    lift = serializers.BooleanField(default=True)
-    garage = serializers.BooleanField(default=True)
-    balcony = serializers.BooleanField(default=True)
-    terrace = serializers.BooleanField(default=True)
-    garden = serializers.BooleanField(default=True)
-    AC = serializers.BooleanField(default=True)
-    safety_system = serializers.BooleanField(default=True)
-    needs_renovation = serializers.BooleanField(default=True)
+    pool = serializers.BooleanField(default=False)
+    sauna = serializers.BooleanField(default=False)
+    jacuzzi = serializers.BooleanField(default=False)
+    lift = serializers.BooleanField(default=False)
+    garage = serializers.BooleanField(default=False)
+    balcony = serializers.BooleanField(default=False)
+    terrace = serializers.BooleanField(default=False)
+    garden = serializers.BooleanField(default=False)
+    AC = serializers.BooleanField(default=False)
+    safety_system = serializers.BooleanField(default=False)
+    needs_renovation = serializers.BooleanField(default=False)
 
     def create(self, validated_data):
         return Property.objects.create(**validated_data)
@@ -159,9 +141,7 @@ class PropertySerializer(serializers.Serializer):
 
 
 class KlientSerializer(serializers.Serializer):
-
     id = serializers.IntegerField(read_only=True)
-
     imie = serializers.CharField(required=True, max_length=50)
     nazwisko = serializers.CharField(required=True, max_length=100)
 
@@ -170,7 +150,6 @@ class KlientSerializer(serializers.Serializer):
         default=Klient.PLEC_WYBOR[2][0]  
     )
 
-   
     data_dodania = serializers.DateField(read_only=True)
     wlasciciel = serializers.ReadOnlyField(source="wlasciciel.username")
 
@@ -183,7 +162,3 @@ class KlientSerializer(serializers.Serializer):
         instance.plec = validated_data.get("plec", instance.plec)
         instance.save()
         return instance
-    
-    
-
-

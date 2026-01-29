@@ -7,7 +7,7 @@
 
 <div style="background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #bae6fd;">
     <h4 style="margin-top: 0; color: #0369a1;"> Kontakt do agenta</h4>
-<p><strong>Email:</strong> 
+    <p><strong>Email:</strong> 
         {% if agent.email %}
             <a href="mailto:{{ agent.email }}">{{ agent.email }}</a>
         {% else %}
@@ -16,9 +16,10 @@
     </p>
 </div>
 
-<p>Stanowisko: {{ agent.get_stanowisko_display }}</p>
 <p>Region: {{ agent.region }}</p>
-<hr> <h3>Nieruchomości tego agenta</h3>
+
+<hr> 
+<h3>Nieruchomości tego agenta</h3>
 
 <table class="simple-table">
     <thead>
@@ -48,19 +49,24 @@
         {% endfor %}
     </tbody>
 </table>
-{% if request.user.is_superuser %}
-<a class="btn-tertiary" href="{% url 'agent-update-html' agent.id %}">
-   Edytuj agenta
-</a>
 
-<form method="post" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit"
-            onclick="return confirm('Czy na pewno chcesz usunąć tego agenta?');">
-        Usuń agenta
-    </button>
-</form>
+{% if request.user.is_superuser %}
+<div style="margin-top: 20px;">
+    <a class="btn-tertiary" href="{% url 'agent-update-html' agent.id %}">
+       Edytuj agenta
+    </a>
+
+    <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger"
+                onclick="return confirm('Czy na pewno chcesz usunąć tego agenta?');">
+            Usuń agenta
+        </button>
+    </form>
+</div>
 {% endif %}
+
+<br>
 <a href="{% url 'agent-list-html' %}">← Wróć do listy</a>
 
 {% endblock %}

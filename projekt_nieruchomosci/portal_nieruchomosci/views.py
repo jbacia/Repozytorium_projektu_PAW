@@ -60,7 +60,7 @@ def klient_update(request, pk):
 def klient_delete(request, pk):
     klient = get_object_or_404(Klient, pk=pk, user=request.user)
     klient.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_24_NO_CONTENT)
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
@@ -97,6 +97,7 @@ def agent_detail(request, pk):
     elif request.method == "DELETE":
         agent.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(["GET", "POST"])
 def propertytype_list(request):
@@ -143,6 +144,7 @@ def propertytype_properties(request, pk):
     serializer = PropertySerializer(props, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 @api_view(["GET", "POST"])
 def property_list(request):
     if request.method == "GET":
@@ -180,8 +182,6 @@ def property_search(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-
 def user_login(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -212,7 +212,6 @@ def user_signup(request):
         pass2 = request.POST.get('pass2')
         role = request.POST.get('role')
         
-        
         imie = request.POST.get('imie')
         nazwisko = request.POST.get('nazwisko')
         email = request.POST.get('email')
@@ -226,9 +225,7 @@ def user_signup(request):
         if User.objects.filter(username=username).exists():
             return render(request, 'portal_nieruchomosci/signup.html', {'error': 'Taki login jest już zajęty!'})
 
-        
         user = User.objects.create_user(username=username, password=pass1, email=email)
-        
         
         if role == 'agent':
             group, _ = Group.objects.get_or_create(name='Agenci')
@@ -238,7 +235,6 @@ def user_signup(request):
                 first_name=imie, 
                 last_name=nazwisko,
                 region="PL", 
-                stanowisko="A",
                 email=email
             )
         elif role == 'client':
@@ -258,8 +254,6 @@ def user_signup(request):
     return render(request, 'portal_nieruchomosci/signup.html')
 
 
-
-
 @login_required(login_url='user-login')
 def agent_my_offers(request):
     if not hasattr(request.user, 'agent_profile'):
@@ -276,11 +270,7 @@ def agent_my_clients(request):
         return redirect('property-list-html')
 
     agent = request.user.agent_profile
-    
-    
     moj_klienci = Klient.objects.filter(opiekun=agent)
-    
-    
     wolni_klienci = Klient.objects.filter(opiekun__isnull=True)
     
     return render(request, "portal_nieruchomosci/agent/my_clients.html", {
@@ -296,8 +286,6 @@ def przypisz_klienta(request, id):
             klient.opiekun = request.user.agent_profile
             klient.save()
     return redirect('agent-my-clients')
-
-
 
 
 def property_list_html(request):
@@ -339,11 +327,9 @@ def property_create_html(request):
         location = request.POST.get("location")
         description = request.POST.get("description", "")
         price = request.POST.get("price")
-        transaction_type = request.POST.get("transaction_type", "S")
         square_meters = request.POST.get("square_meters")
         current_month = timezone.now().month
 
-        
         if is_agent:
             agent_obj = request.user.agent_profile
         else:
@@ -353,7 +339,6 @@ def property_create_html(request):
         type_id = request.POST.get("property_type")
         type_obj = PropertyType.objects.filter(id=type_id).first() if type_id else None
 
-        
         pool = bool(request.POST.get("pool"))
         sauna = bool(request.POST.get("sauna"))
         jacuzzi = bool(request.POST.get("jacuzzi"))
@@ -373,7 +358,6 @@ def property_create_html(request):
         try:
             price_val = float(price)
             sq_val = float(square_meters)
-            
             if price_val <= 0 or sq_val <= 0:
                 error = "Cena i metraż muszą być liczbami dodatnimi!"
                 return render(request, "portal_nieruchomosci/property/create.html", {"error": error, "agents": agents, "types": types})
@@ -397,7 +381,6 @@ def property_create_html(request):
 def property_update_html(request, id):
     property_obj = get_object_or_404(Property, id=id)
 
-    
     is_owner_agent = hasattr(request.user, 'agent_profile') and property_obj.agent == request.user.agent_profile
     if not (request.user.is_superuser or is_owner_agent):
         return render(request, "portal_nieruchomosci/login.html", {"error": "Nie możesz edytować tej oferty."})
@@ -410,7 +393,6 @@ def property_update_html(request, id):
         property_obj.location = request.POST.get("location")
         property_obj.description = request.POST.get("description")
         property_obj.price = request.POST.get("price")
-        transaction_type = request.POST.get("transaction_type", "S")
         property_obj.square_meters = request.POST.get("square_meters")
 
         property_obj.pool = bool(request.POST.get("pool"))
@@ -432,7 +414,6 @@ def property_update_html(request, id):
         try:
             price_val = float(property_obj.price)
             sq_val = float(property_obj.square_meters)
-
             if price_val <= 0 or sq_val <= 0:
                 error = "Cena i metraż muszą być liczbami dodatnimi!"
                 return render(request, "portal_nieruchomosci/property/update.html", {"property": property_obj, "error": error})
@@ -442,8 +423,6 @@ def property_update_html(request, id):
 
         property_obj.save()
         return redirect("property-detail-html", id=property_obj.id)
-
-
 
 
 def agent_list_html(request):
@@ -477,10 +456,11 @@ def agent_update_html(request, id):
         agent.last_name = request.POST.get("last_name")
         agent.email = request.POST.get("email")
         agent.region = request.POST.get("region")
-        agent.stanowisko = request.POST.get("stanowisko")
-        if not (agent.first_name and agent.last_name and agent.stanowisko):
+    
+        if not (agent.first_name and agent.last_name):
             error = "Dane wymagane."
             return render(request, "portal_nieruchomosci/agent/update.html", {"agent": agent, "error": error})
+        
         agent.save()
         if agent.user:
             if agent.user.email != agent.email:
@@ -497,11 +477,8 @@ def agent_create_html(request):
         last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         region = request.POST.get("region")
-        stanowisko = request.POST.get("stanowisko")
-        Agent.objects.create(first_name=first_name, last_name=last_name, region=region, stanowisko=stanowisko, email=email)
+        Agent.objects.create(first_name=first_name, last_name=last_name, region=region, email=email)
         return redirect("agent-list-html")
-
-
 
 
 @login_required(login_url='user-login')
@@ -528,9 +505,7 @@ def klient_create_html(request):
         if not (imie and nazwisko and plec):
             return render(request, "portal_nieruchomosci/klient/create.html", {"error": "Wypełnij wszystkie pola!"})
         
-        
         new_klient = Klient.objects.create(imie=imie, nazwisko=nazwisko, plec=plec, email=email)
-        
         
         if is_agent:
             new_klient.opiekun = request.user.agent_profile
@@ -582,8 +557,6 @@ def klient_update_html(request, id):
         klient.email = request.POST.get("email")
         klient.save()
         return redirect("klient-detail-html", id=klient.id)
-
-
 
 
 def propertytype_list_html(request):
