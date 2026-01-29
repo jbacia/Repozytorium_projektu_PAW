@@ -19,6 +19,7 @@
             <th>Tytuł</th>
             <th>Lokalizacja</th>
             <th>Cena</th>
+            <th>Akcja</th>
         </tr>
     </thead>
     <tbody>
@@ -28,9 +29,9 @@
                 <strong>{{ property.title }}</strong>
             </td>
             <td>{{ property.location }}</td>
-            <td>{{ property.price }} EUR</td>
+            <td>{{ property.price }} PLN</td>
             <td>
-                <a href="{% url 'property-detail-html' property.id %}" class="btn-tertiary">
+                <a href="{% url 'property-detail-html' pk=property.pk %}" class="btn-tertiary">
                     Zobacz
                 </a>
             </td>
@@ -44,13 +45,13 @@
 </table>
 
 {% if request.user.is_superuser %}
-<a class="btn-tertiary" href="{% url 'propertytype-update-html' type.id %}">
+<a class="btn-tertiary" href="{% url 'propertytype-update-html' pk=type.pk %}">
   Edytuj typ
 </a>
 
 <form method="post" style="margin-top: 12px;">
   {% csrf_token %}
-  <button type="submit"
+  <button type="submit" class="btn-danger"
           onclick="return confirm('Czy na pewno chcesz usunąć ten typ nieruchomości?');">
     Usuń typ
   </button>

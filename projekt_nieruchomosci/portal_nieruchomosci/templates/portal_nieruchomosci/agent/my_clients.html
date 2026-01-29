@@ -21,7 +21,7 @@
     <tr>
         <td>{{ k.imie }} {{ k.nazwisko }}</td>
         <td>
-            <form method="post" action="{% url 'przypisz-klienta' k.id %}">
+            <form method="post" action="{% url 'przypisz-klienta' pk=k.pk %}">
                 {% csrf_token %}
                 <button type="submit" class="btn">Przypisz do mnie</button>
             </form>

@@ -14,7 +14,7 @@
 
   <p>
     <label>Nazwa *</label><br>
-    <input type="text" name="name" value="{{ type.name }}">
+    <input type="text" name="name" value="{{ type.name }}" required>
   </p>
 
   <p>
@@ -40,7 +40,7 @@
   </p>
 
   <button type="submit" class="btn">Zapisz zmiany</button>
-  <a class="btn-tertiary" href="{% url 'propertytype-detail-html' type.id %}">Anuluj</a>
+  <a class="btn-tertiary" href="{% url 'propertytype-detail-html' pk=type.pk %}">Anuluj</a>
 </form>
 
 {% endblock %}

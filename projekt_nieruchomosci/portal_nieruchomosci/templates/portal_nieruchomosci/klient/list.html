@@ -14,29 +14,26 @@
 <table class="simple-table">
     <thead>
         <tr>
-        <th>ID</th>
-        <th>Imię</th>
+        <th>PK</th> <th>Imię</th>
         <th>Nazwisko</th>
         <th>Płeć</th>
         <th>Email</th>
+        <th>Akcja</th>
         </tr>
 
     </thead>
     <tbody>
     {% for klient in klienci %}
     <tr>
-        <td>{{ klient.id }}</td>
-        <td>{{ klient.imie }}</td>
+        <td>{{ klient.pk }}</td> <td>{{ klient.imie }}</td>
         <td>{{ klient.nazwisko }}</td>
         <td>{{ klient.plec }}</td>
         <td> {{ klient.email|default:"-" }}</td>
             
         <td> 
-                <a class="btn-tertiary" href="{% url 'klient-detail-html' klient.id %}">
+                <a class="btn-tertiary" href="{% url 'klient-detail-html' pk=klient.pk %}">
                     Szczegóły
                 </a>
-        </td>
-
         </td>
     </tr>
     {% empty %}

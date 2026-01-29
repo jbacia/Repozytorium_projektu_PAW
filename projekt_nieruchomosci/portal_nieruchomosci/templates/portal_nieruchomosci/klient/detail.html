@@ -7,18 +7,18 @@
 
 <p><strong>Imię:</strong> {{ klient.imie }}</p>
 <p><strong>Nazwisko:</strong> {{ klient.nazwisko }}</p>
-<p><strong>Email:</strong>{{klient.email}}</p>
+<p><strong>Email:</strong> {{ klient.email }}</p>
 <p><strong>Płeć:</strong> {{ klient.plec }}</p>
 <p><strong>Data dodania:</strong> {{ klient.data_dodania }}</p>
 
 <a class="btn-tertiary"
-   href="{% url 'klient-update-html' klient.id %}">
+   href="{% url 'klient-update-html' pk=klient.pk %}">
     Edytuj klienta
 </a>
 
 <form method="post">
     {% csrf_token %}
-    <button type="submit"
+    <button type="submit" class="btn-danger"
             onclick="return confirm('Czy na pewno chcesz usunąć tego klienta?');">
         Usuń klienta
     </button>

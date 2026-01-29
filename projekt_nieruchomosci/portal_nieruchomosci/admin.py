@@ -2,9 +2,9 @@ from django.contrib import admin
 from .models import PropertyType, Agent, Property, Klient
 
 class AgentAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'stanowisko', 'region']
-    list_filter = ['stanowisko', 'region']
-    search_fields = ['first_name', 'last_name','stanowisko', 'region']
+    list_display = ['first_name', 'last_name', 'region']
+    list_filter = ['region']
+    search_fields = ['first_name', 'last_name', 'region']
 
 class PropertyTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'is_residential', 'popularity_rank']

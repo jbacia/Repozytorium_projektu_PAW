@@ -9,15 +9,12 @@
         <a class="btn" href="{% url 'agent-create-html' %}">+ Dodaj agenta</a>
     </p>
     {% endif %}
+
 {% for a in agents %}
-
-
     <p>
         <strong>{{ a.first_name }} {{ a.last_name }}</strong><br>
-        Stanowisko: {{ a.get_stanowisko_display }}<br>
         Region: {{ a.region }}<br>
-        <a href="{% url 'agent-detail-html' a.id %}">Szczegóły</a>
-
+        <a href="{% url 'agent-detail-html' pk=a.pk %}">Szczegóły</a>
     </p>
     <hr>
 {% empty %}

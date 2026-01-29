@@ -6,7 +6,7 @@
 <h2> Wyszukiwarka klientów</h2>
 
 <form method="get" action="{% url 'klient-search-html' %}">
-    <label for="q">Fragment nazwiska:</label>
+    <label for="q">Szukaj po imieniu lub nazwisku:</label>
     <input type="text" id="q" name="q" value="{{ query }}">
     <button type="submit" class="btn">Szukaj</button>
 </form>
@@ -20,23 +20,22 @@
 <table class="simple-table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Imię</th>
+            <th>PK</th> <th>Imię</th>
             <th>Nazwisko</th>
             <th>Płeć</th>
             <th>Data dodania</th>
+            <th>Akcja</th>
         </tr>
     </thead>
     <tbody>
         {% for klient in klienci %}
         <tr>
-            <td>{{ klient.id }}</td>
-            <td>{{ klient.imie }}</td>
+            <td>{{ klient.pk }}</td> <td>{{ klient.imie }}</td>
             <td>{{ klient.nazwisko }}</td>
             <td>{{ klient.plec }}</td>
             <td>{{ klient.data_dodania }}</td>
             <td>
-            <a href="{% url 'klient-detail-html' klient.id %}" class="btn-tertiary">
+            <a href="{% url 'klient-detail-html' pk=klient.pk %}" class="btn-tertiary">
                 Szczegóły
             </a>
         </td>
@@ -44,11 +43,11 @@
         {% empty %}
         {% if query %}
         <tr>
-            <td colspan="5">Brak wyników dla podanego zapytania.</td>
+            <td colspan="6">Brak wyników dla podanego zapytania.</td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="5">Wpisz fragment nazwiska i kliknij „Szukaj”.</td>
+            <td colspan="6">Wpisz imię lub nazwisko i kliknij „Szukaj”.</td>
         </tr>
         {% endif %}
         {% endfor %}

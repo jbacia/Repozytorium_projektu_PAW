@@ -37,19 +37,10 @@ class PropertyType(models.Model):
 
 class Agent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='agent_profile')
-    
-    Stanowisko = (
-        ('A', 'Agent nieruchomości'),
-        ('D', 'Doradca sprzedaży'),
-        ('O', 'Osoba prywatna' ),
-        ('F', 'Firma' )
-    )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    stanowisko = models.CharField(max_length=1, choices=Stanowisko, default="A")
     email = models.EmailField(blank=True, null=True)
-    region = models.CharField(max_length=2, help_text="Kod regionu lub kraju, np. PL, DE, CZ")
-    
+    region = models.CharField(max_length=3, help_text="Kod regionu lub kraju, np. PL, DE, CZ")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -122,17 +113,17 @@ class Property(models.Model):
     )
     
     
-    pool = models.BooleanField(default=True, help_text="Czy nieruchomość ma basen?")
-    sauna = models.BooleanField(default=True, help_text="Czy nieruchomość ma saunę?")
-    jacuzzi = models.BooleanField(default=True, help_text="Czy nieruchomość ma jacuzzi?")
-    lift = models.BooleanField(default=True, help_text="Czy nieruchomość ma windę?")
-    garage = models.BooleanField(default=True, help_text="Czy nieruchomość ma garaz lub prywatne miejsce parkingowe?")
-    balcony = models.BooleanField(default=True, help_text="Czy nieruchomość ma balkon?")
-    terrace = models.BooleanField(default=True, help_text="Czy nieruchomość ma taras?")
-    garden = models.BooleanField(default=True, help_text="Czy nieruchomość ma ogród?")
-    AC = models.BooleanField(default=True, help_text="Czy nieruchomość ma klimatyzacja?")
-    safety_system = models.BooleanField(default=True, help_text="Czy nieruchomość ma alarm lub całodobową ochronę?")
-    needs_renovation = models.BooleanField(default=True, help_text="Czy nieruchomość jest do remontu?")
+    pool = models.BooleanField(default=False, help_text="Czy nieruchomość ma basen?")
+    sauna = models.BooleanField(default=False, help_text="Czy nieruchomość ma saunę?")
+    jacuzzi = models.BooleanField(default=False, help_text="Czy nieruchomość ma jacuzzi?")
+    lift = models.BooleanField(default=False, help_text="Czy nieruchomość ma windę?")
+    garage = models.BooleanField(default=False, help_text="Czy nieruchomość ma garaz lub prywatne miejsce parkingowe?")
+    balcony = models.BooleanField(default=False, help_text="Czy nieruchomość ma balkon?")
+    terrace = models.BooleanField(default=False, help_text="Czy nieruchomość ma taras?")
+    garden = models.BooleanField(default=False, help_text="Czy nieruchomość ma ogród?")
+    AC = models.BooleanField(default=False, help_text="Czy nieruchomość ma klimatyzacja?")
+    safety_system = models.BooleanField(default=False, help_text="Czy nieruchomość ma alarm lub całodobową ochronę?")
+    needs_renovation = models.BooleanField(default=False, help_text="Czy nieruchomość jest do remontu?")
 
     def __str__(self):
         return self.title

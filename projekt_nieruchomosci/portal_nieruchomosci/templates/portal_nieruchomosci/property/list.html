@@ -23,18 +23,25 @@
         <div class="property-card-body">
             <p><strong>Lokalizacja:</strong> {{ property.location }}</p>
             <p><strong>Metraż:</strong> {{ property.square_meters }} m²</p>
-            <p><strong>Cena:</strong> {{ property.price }} EUR</p>
+            <p><strong>Cena:</strong> {{ property.price }} PLN</p>
             
-            <div class="features">
-                {% if property.pool %}<span class="tag"> Basen</span>{% endif %}
-                {% if property.sauna %}<span class="tag"> Sauna</span>{% endif %}
-                {% if property.garage %}<span class="tag"> Garaż</span>{% endif %}
-                {% if property.garden %}<span class="tag"> Ogród</span>{% endif %}
+           <div class="features">
+                {% if property.pool %}<span class="tag">Basen</span>{% endif %}
+                {% if property.sauna %}<span class="tag">Sauna</span>{% endif %}
+                {% if property.jacuzzi %}<span class="tag">Jacuzzi</span>{% endif %}
+                {% if property.lift %}<span class="tag">Winda</span>{% endif %}
+                {% if property.garage %}<span class="tag">Garaż</span>{% endif %}
+                {% if property.balcony %}<span class="tag">Balkon</span>{% endif %}
+                {% if property.terrace %}<span class="tag">Taras</span>{% endif %}
+                {% if property.garden %}<span class="tag">Ogród</span>{% endif %}
+                {% if property.AC %}<span class="tag">Klimatyzacja</span>{% endif %}
+                {% if property.safety_system %}<span class="tag">System bezp.</span>{% endif %}
+                {% if property.needs_renovation %}<span class="tag">Wymaga remontu</span>{% endif %}
             </div>
         </div>
         
         <div class="property-card-footer">
-            <a class="btn" href="{% url 'property-detail-html' property.id %}">
+            <a class="btn" href="{% url 'property-detail-html' pk=property.pk %}">
                 Szczegóły →
             </a>
         </div>
